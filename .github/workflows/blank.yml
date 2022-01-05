@@ -27,7 +27,7 @@ jobs:
           format: 'YYYY-MM-DD-HH-mm-ss'
 
       - name: Get SHA
-        id: vars
+        id: sha
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: Create Release
@@ -36,8 +36,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: prerelease-${{ steps.time.outputs.time }}-${{ steps.sha.outputs.sha_short }}
+          release_name: Prerelease ${{ steps.time.outputs.time }} ${{ steps.sha.outputs.sha_short }}
+          body: ${{github.event.head_commit.message}}
           draft: false
           prerelease: false
           owner: tswow-admin
