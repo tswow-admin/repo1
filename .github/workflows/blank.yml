@@ -18,6 +18,16 @@ jobs:
             BuildDirectory = "C:/tswow-build"
             InstallDirectory = "../tswow-install"
           write-mode: overwrite
+
+      - name: Get Time
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 0
+          format: 'YYYY-MM-DD-HH-mm-ss'
+      - name: Get SHA
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Deploy Windows Release
         uses: WebFreak001/deploy-nightly@v1.1.0
         env:
@@ -26,6 +36,6 @@ jobs:
           upload_url: https://uploads.github.com/repos/tswow-admin/repo1/releases/56437580/assets{?name,label}
           release_id: 56437580
           asset_path: ./build.conf
-          asset_name: tswow-prerelease-$$.zip
-          asset_content_type: application/x-7z-compressed
+          asset_name: tswow-prerelease-${{steps.time.outputs.time}}-${{steps.vars.outputs.sha_short}}.txt
+          asset_content_type: text/plain
           max_releases: 15
