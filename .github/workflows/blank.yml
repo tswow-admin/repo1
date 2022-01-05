@@ -36,7 +36,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: build-${{ steps.sha.outputs.sha_short }}-${{ steps.time.outputs.time }}
-          release_name: Build \#${{ steps.sha.outputs.sha_short }} (${{ steps.time.outputs.time }})
+          release_name: | 
+            Build #${{ steps.sha.outputs.sha_short }} (${{ steps.time.outputs.time }})
           body: |
             **Commits**: https://github.com/tswow-admin/repo1/compare/${{github.event.before}}...${{github.event.after}}
           draft: false
