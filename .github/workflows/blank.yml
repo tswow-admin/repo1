@@ -32,7 +32,7 @@ jobs:
 
       - name: Get Log
         id: Log
-        run: echo "::set-output name=log::$(git log ${{github.event.after}}..${{github.event.before}})"
+        run: echo "::set-output name=log::$(git log ${{github.event.before}}..${{github.event.after}})"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
