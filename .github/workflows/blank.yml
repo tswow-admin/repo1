@@ -30,6 +30,9 @@ jobs:
         id: sha
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
+      - name: Get Log
+        id: Log
+        run: echo "::set-output name=log::$(git log ${{github.event.before}}..${{github.event.after}})"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -38,7 +41,9 @@ jobs:
         with:
           tag_name: prerelease-${{ steps.time.outputs.time }}-${{ steps.sha.outputs.sha_short }}
           release_name: Prerelease ${{ steps.time.outputs.time }} ${{ steps.sha.outputs.sha_short }}
-          body: ${{github.event.head_commit.message}}
+          body: |
+            ${{github.event.head_commit.message}}
+            ${{steps.log.outputs.log}}
           draft: false
           prerelease: false
           owner: tswow-admin
