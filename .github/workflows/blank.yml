@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Build Directory
+        uses: DamianReeves/write-file-action@v1.0
+        with:
+          path: "./build.conf"
+          contents: |
+            BuildDirectory = "C:/tswow-build"
+            InstallDirectory = "../tswow-install"
+          write-mode: overwrite
+      - name: Deploy Windows Release
+        uses: WebFreak001/deploy-nightly@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: https://uploads.github.com/repos/tswow-admin/repo1/releases/56437580/assets{?name,label}
+          release_id: 56437580
+          asset_path: ./build.conf
+          asset_name: tswow-prerelease-$$.zip
+          asset_content_type: application/x-7z-compressed
+          max_releases: 15
